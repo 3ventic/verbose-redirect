@@ -10,8 +10,10 @@ function getOptions() {
 }
 
 function wait(duration) {
-    return new Promise(resolve => {
-        setTimeout(() => resolve, duration);
+    return new Promise(function(resolve, _) {
+        setTimeout(function() {
+            resolve(duration);
+        }, duration);
     });
 }
 
@@ -57,7 +59,7 @@ browser.webRequest.onBeforeRequest.addListener(
         browser.notifications.create(details.requestId, {
             type: 'basic',
             title: 'Verbose Redirect',
-            message: `${originUrl.host} -> ${url}\nClick here to block`
+            message: `${originUrl.host} -> ${url}`
         });
 
         let opts = await getOptions();

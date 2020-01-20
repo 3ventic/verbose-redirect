@@ -3,7 +3,7 @@
 
     "name": "Verbose Redirect",
     "description": "Notify and delay all redirects",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "icons": {
         "150": "icon.png"
     },
