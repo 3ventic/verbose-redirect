@@ -1,6 +1,6 @@
 const requestFilter = {
     urls: ['<all_urls>'],
-    types: ['main_frame', 'script', 'sub_frame']
+    types: ['main_frame', 'sub_frame']
 };
 
 function getOptions() {
@@ -17,6 +17,10 @@ function wait(duration) {
     });
 }
 
+function lastRequestKey(tabId, frameId) {
+    return `${tabId}:${frameId}`;
+}
+
 let blocks = new Map();
 let tabLastRequestUrl = new Map();
 
@@ -31,24 +35,28 @@ browser.notifications.onClicked.addListener(notificationId => {
 
 browser.webRequest.onHeadersReceived.addListener(
     details => {
-        tabLastRequestUrl.set(details.tabId, details.url);
+        tabLastRequestUrl.set(lastRequestKey(details.tabId, details.frameId), details.url);
     },
     requestFilter,
     []
 );
 
 browser.tabs.onRemoved.addListener(tabId => {
-    tabLastRequestUrl.delete(tabId);
+    // Clean up to prevent the map from growing over time
+    let keysToRemove = tabLastRequestUrl.keys().filter(k => k.startsWith(`${tabId}:`));
+    for (keys of keysToRemove) {
+        tabLastRequestUrl.delete(key);
+    }
 });
 
 browser.webRequest.onBeforeRequest.addListener(
     async function(details) {
         // Always allow first request
-        if (!tabLastRequestUrl.has(details.tabId)) {
+        if (!tabLastRequestUrl.has(lastRequestKey(details.tabId, details.frameId))) {
             return;
         }
 
-        let originUrl = new URL(tabLastRequestUrl.get(details.tabId));
+        let originUrl = new URL(tabLastRequestUrl.get(lastRequestKey(details.tabId, details.frameId)));
         let url = new URL(details.url);
 
         // Allow redirects within host
