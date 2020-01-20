@@ -1,6 +1,6 @@
 const requestFilter = {
     urls: ['<all_urls>'],
-    types: ['main_frame', 'script', 'sub_frame', 'xmlhttprequest', 'object']
+    types: ['main_frame', 'script', 'sub_frame']
 };
 
 function getOptions() {
