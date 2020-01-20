@@ -1,0 +1,31 @@
+{
+    "manifest_version": 2,
+
+    "name": "Verbose Redirect",
+    "description": "Notify and delay all redirects",
+    "version": "0.1.0",
+    "icons": {
+        "150": "icon.png"
+    },
+
+    "browser_action": {
+        "default_icon": {
+            "150": "icon.png"
+        },
+        "default_popup": "options.html"
+    },
+    "permissions": ["storage", "webRequest", "webRequestBlocking", "notifications", "<all_urls>", "tabs"],
+    "background": {
+        "scripts": ["inspector.js"]
+    },
+    "options_ui": {
+        "page": "options.html",
+        "chrome_style": true
+    },
+    "content_security_policy": "script-src 'self'; default-src 'self'",
+    "applications": {
+        "gecko": {
+            "strict_min_version": "72"
+        }
+    }
+}
